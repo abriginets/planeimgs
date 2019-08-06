@@ -1,0 +1,19 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "pretty": true,
+        "allowJs": false,
+        "inlineSourceMap": false,
+        "strict": true,
+        "strictNullChecks": false,
+        "noUnusedLocals": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "outDir": "./build",
+        "rootDir": "./src",
+        "baseUrl": "./"
+    }
+  }

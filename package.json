@@ -1,0 +1,31 @@
+{
+  "name": "planeimgs",
+  "version": "1.0.0",
+  "description": "Repository with free PNG aircraft images",
+  "main": "build/index.js",
+  "scripts": {
+    "watch-typescript": "tsc --watch --project ./tsconfig.json",
+    "start": "node ./build/index.js",
+    "build": "tsc --project ./tsconfig.json"
+  },
+  "keywords": [
+    "aircrafts",
+    "boeing",
+    "airbus",
+    "bombardier",
+    "embraer"
+  ],
+  "author": "JamesJGoodwin",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/got": "^9.6.5",
+    "@types/puppeteer": "^1.19.0",
+    "@types/yargs": "^13.0.2",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "got": "^9.6.0",
+    "puppeteer": "^1.19.0",
+    "yargs": "^13.3.0"
+  }
+}
