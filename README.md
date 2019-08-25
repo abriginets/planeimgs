@@ -19,10 +19,6 @@ Since developers couldn't find a proper source of those images it was proposed t
 
 * Aircraft manufacturers
   * Add Airbus aircrafts and liveries
-    * A220 Family- <a href="https://www.airbus.com/aircraft/passenger-aircraft/a220-family.html" target="_blank">Source</a>, no liveries
-    * A320 Family - <a href="https://www.airbus.com/aircraft/passenger-aircraft/a320-family.html" target="_blank">Source</a>, no liveries
-    * A330 Family - <a href="https://www.airbus.com/aircraft/passenger-aircraft/a330-family.html" target="_blank">Source</a>, no liveries
-    * A350 XWB Family - <a href="https://www.airbus.com/aircraft/passenger-aircraft/a350xwb-family.html" target="_blank">Source</a>, no liveries
     * A380 - <a href="https://www.iflya380.com/a380-airlines.html" target="_blank">Source</a> ✔
   * Add Bombardier aircrafts and liveries - No source :x:
   * Add Embraer aircrafts and liveries - <a href="https://www.embraercommercialaviation.com/" target="_blank">source</a>, no liveries
