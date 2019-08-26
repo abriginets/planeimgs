@@ -12,7 +12,8 @@ import { promisify } from 'util'
 const exec = promisify(childProcessExec)
 
 const argv = {
-    debug: true
+    debug: true,
+    crawlTasks: ['boeing', 'airbus', 'airbus380'] // remove or add items to crawl specific airlines and jets
 }
 
 const database = JSON.parse(fs.readFileSync('database.json', 'utf-8'))
@@ -25,8 +26,54 @@ const URL_REGEXP = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9
 exec('magick -version').then(() => start()).catch(e => console.error(e))
 
 async function start() {
-    await crawlBoeingPics()
-    await crawlAirbusPics()
+    if(argv.crawlTasks.includes('boeing')) await crawlBoeingPics()
+    if(argv.crawlTasks.includes('airbus')) await crawlAirbusPics()
+    if(argv.crawlTasks.includes('airbus380')) await crawlA380pics()
+}
+
+async function crawlA380pics() {
+    const browser = await puppeteer.launch({ headless: 'debug' in argv === false})
+    const page = await browser.newPage()
+    await page.goto('https://www.iflya380.com/a380-airlines.html')
+
+    var airlines = await page.evaluate(() => {
+        var index380 = {
+            'airfrance': 'AF',
+            'ana': 'NH',
+            'asiana': 'OZ',
+            'british': 'BA',
+            'chinasouthern': 'CZ',
+            'emirates': 'EK',
+            'etihad': 'EY',
+            'hifly': '5K',
+            'korean': 'KE',
+            'lufthansa': 'LH',
+            'malaysia': 'MH',
+            'qantas': 'QF',
+            'qatar': 'QR',
+            'singapore': 'SQ',
+            'thai': 'TG'
+        }
+
+        var airlinesLinks = {}
+        document.querySelectorAll('.company-image').forEach(val => {
+            airlinesLinks[index380[val.classList.value.replace('company-image ', '')]] = window.getComputedStyle(val).backgroundImage.match(/url\("(.*)"\)/)[1]
+        })
+        return airlinesLinks
+    })
+
+    var dirpath = path.resolve(__dirname, '../images/airbus/a380')
+
+    if(!fs.existsSync(dirpath)) {
+        fs.mkdirSync(dirpath, { recursive: true })
+    }
+
+    for(let code in airlines) {
+        var res = await got(airlines[code], { encoding: null, rejectUnauthorized: false })
+        fs.writeFileSync(`${dirpath}/${code}.png`, res.body)
+    }
+
+    await browser.close()
 }
 
 // AIRBUS
