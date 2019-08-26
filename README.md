@@ -18,13 +18,9 @@ Since developers couldn't find a proper source of those images it was proposed t
 ### TODOs
 
 * Aircraft manufacturers
-  * Add Airbus aircrafts and liveries
-    * A380 - <a href="https://www.iflya380.com/a380-airlines.html" target="_blank">Source</a> ✔
   * Add Bombardier aircrafts and liveries - No source :x:
   * Add Embraer aircrafts and liveries - <a href="https://www.embraercommercialaviation.com/" target="_blank">source</a>, no liveries
   * Add Sukhoi aircrafts and liveries - No source :x:
-* Add transparency to images
-* Add concurrency to scrapping and downloading process
 * Add option for lossless resizing and transformation to different dimensions
 
 <b>Important:</b> if you know any source of aircrafts images with different liveries then please create an issue. I'll be very thankful.
