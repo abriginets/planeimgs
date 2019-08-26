@@ -13,7 +13,7 @@ const exec = promisify(childProcessExec)
 
 const argv = {
     debug: true,
-    crawlTasks: ['boeing', 'airbus', 'airbus380'] // remove or add items to crawl specific airlines and jets
+    crawlTasks: ['boeing', 'airbus', 'airbus380', 'embraer'] // remove or add items to crawl specific airlines and jets
 }
 
 const database = JSON.parse(fs.readFileSync('database.json', 'utf-8'))
@@ -29,6 +29,64 @@ async function start() {
     if(argv.crawlTasks.includes('boeing')) await crawlBoeingPics()
     if(argv.crawlTasks.includes('airbus')) await crawlAirbusPics()
     if(argv.crawlTasks.includes('airbus380')) await crawlA380pics()
+    if(argv.crawlTasks.includes('embraer')) await crawlEmbraerPics()
+}
+
+async function crawlEmbraerPics() {
+    const browser = await puppeteer.launch({ headless: 'debug' in argv === false})
+    const page = await browser.newPage()
+    await page.goto('https://www.embraercommercialaviation.com/our-aircraft/')
+
+    var pagesToCrawl = await page.evaluate(() => {
+        var pages : string[] = []
+        document.querySelectorAll('.draws ul a.current-menu-item').forEach(a => {
+            pages.push(a.getAttribute('href'))
+        })
+        return pages
+    })
+
+    var crawlPromises : any = []
+
+    pagesToCrawl.forEach(url => {
+        crawlPromises.push(crawlEmbraerPic(url))
+    })
+
+    await Promise.all(crawlPromises)
+
+    async function crawlEmbraerPic(link : string) {
+        var embPage = await browser.newPage()
+        await embPage.goto(link, { waitUntil: 'domcontentloaded' })
+        
+        let imgUrl = await embPage.evaluate(() => {
+            var images = document.querySelectorAll('img')
+            
+            for(let i = 0; i < images.length; i++) {
+                var src = images[i].getAttribute('src')
+                if(src.endsWith('model.png') || src.includes('embraer_jet_right_aspect')) {
+                    return src
+                }
+            }
+        })
+
+        if(!imgUrl) {
+            console.log(link)
+        }
+
+        await embPage.close()
+
+        var dirpath = path.resolve(__dirname, '../images/embraer')
+
+        if(!fs.existsSync(dirpath)) {
+            fs.mkdirSync(dirpath, { recursive: true })
+        }
+
+        var filename = imgUrl.split('/').pop()
+
+        var res = await got(imgUrl, { encoding: null, rejectUnauthorized: false })
+        fs.writeFileSync(`${dirpath}/${filename}`, res.body)
+    }
+
+    await browser.close()
 }
 
 async function crawlA380pics() {
@@ -157,7 +215,7 @@ async function crawlAirbusPics() {
         fs.writeFileSync(`${dirpath}/${filename}_tmp.png`, res.body)
 
         try {
-            await exec(`magick ${dirpath}/${filename}_tmp.png -colors 255 -strip -flatten -fuzz 5% -trim +repage ${dirpath}/${filename}.png`)
+            await exec(`magick ${dirpath}/${filename}_tmp.png -strip -flatten -fuzz 5% -trim +repage ${dirpath}/${filename}.png`)
             fs.unlinkSync(`${dirpath}/${filename}_tmp.png`)
         } catch(e) {
             console.error(e)
@@ -253,7 +311,7 @@ async function crawlBoeingPics() {
                 fs.writeFileSync(`${dirpath}/${airline}.${fileExt}`, res.body)
         
                 try {
-                    await exec(`magick ${dirpath}/${airline}.${fileExt} -colors 255 -strip -flatten -fuzz 5% -trim +repage ${dirpath}/${database.boeing[airline]}.png`)
+                    await exec(`magick ${dirpath}/${airline}.${fileExt} -strip -flatten -fuzz 5% -trim +repage ${dirpath}/${database.boeing[airline]}.png`)
                 } catch(e) {
                     console.log(`Image ${airline}.${fileExt} left unprocessed after error:\n${e}`)
                 }
