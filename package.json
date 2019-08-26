@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "got": "^9.6.0",
-    "puppeteer": "^1.19.0",
-    "yargs": "^13.3.0"
+    "puppeteer": "^1.19.0"
   }
 }
