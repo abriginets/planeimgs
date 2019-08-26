@@ -19,7 +19,6 @@ Since developers couldn't find a proper source of those images it was proposed t
 
 * Aircraft manufacturers
   * Add Bombardier aircrafts and liveries - No source :x:
-  * Add Embraer aircrafts and liveries - <a href="https://www.embraercommercialaviation.com/" target="_blank">source</a>, no liveries
   * Add Sukhoi aircrafts and liveries - No source :x:
 * Add option for lossless resizing and transformation to different dimensions
 
