@@ -35,7 +35,7 @@ async function start() {
 async function crawlEmbraerPics() {
     const browser = await puppeteer.launch({ headless: 'debug' in argv === false})
     const page = await browser.newPage()
-    await page.goto('https://www.embraercommercialaviation.com/our-aircraft/')
+    await page.goto('https://www.embraercommercialaviation.com/our-aircraft/', { waitUntil: 'domcontentloaded', timeout: 60000 })
 
     var pagesToCrawl = await page.evaluate(() => {
         var pages : string[] = []
@@ -80,7 +80,7 @@ async function crawlEmbraerPics() {
             fs.mkdirSync(dirpath, { recursive: true })
         }
 
-        var filename = imgUrl.split('/').pop()
+        var filename = imgUrl.split('/').pop().replace(/embraer_jet_right_aspect_|(_right|_left)?-[0-9]|_model/g, '')
 
         var res = await got(imgUrl, { encoding: null, rejectUnauthorized: false })
         fs.writeFileSync(`${dirpath}/${filename}`, res.body)
