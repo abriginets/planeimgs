@@ -24,7 +24,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
-    "got": "^9.6.0",
+    "got": "^11.8.5",
     "puppeteer": "^1.19.0"
   }
 }
